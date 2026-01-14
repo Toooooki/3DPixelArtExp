@@ -5,16 +5,19 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.Rendering;
 
-public class ScreenSpaceOutlines : ScriptableRendererFeature {
+public class ScreenSpaceOutlines : ScriptableRendererFeature
+{
 
     [System.Serializable]
-    private class ScreenSpaceOutlineSettings {
+    private class ScreenSpaceOutlineSettings
+    {
 
         [Header("General Outline Settings")]
         public Color outlineColor = Color.black;
+        public Color highLightColor = Color.white;
         [Range(0.0f, 20.0f)]
         public float outlineScale = 1.0f;
-        
+
         [Header("Depth Settings")]
         [Range(0.0f, 100.0f)]
         public float depthThreshold = 1.5f;
@@ -34,7 +37,8 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
     }
 
     [System.Serializable]
-    private class ViewSpaceNormalsTextureSettings {
+    private class ViewSpaceNormalsTextureSettings
+    {
 
         [Header("General Scene View Space Normal Texture Settings")]
         public RenderTextureFormat colorFormat;
@@ -49,7 +53,8 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
 
     }
 
-    private class ViewSpaceNormalsTexturePass : ScriptableRenderPass {
+    private class ViewSpaceNormalsTexturePass : ScriptableRenderPass
+    {
 
         private ViewSpaceNormalsTextureSettings normalsTextureSettings;
         private FilteringSettings filteringSettings;
@@ -61,7 +66,8 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
 
         private readonly RenderTargetHandle normals;
 
-        public ViewSpaceNormalsTexturePass(RenderPassEvent renderPassEvent, LayerMask layerMask, LayerMask occluderLayerMask, ViewSpaceNormalsTextureSettings settings) {
+        public ViewSpaceNormalsTexturePass(RenderPassEvent renderPassEvent, LayerMask layerMask, LayerMask occluderLayerMask, ViewSpaceNormalsTextureSettings settings)
+        {
             this.renderPassEvent = renderPassEvent;
             this.normalsTextureSettings = settings;
             filteringSettings = new FilteringSettings(RenderQueueRange.opaque, layerMask);
@@ -81,7 +87,8 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
             occludersMaterial.SetColor("_Color", normalsTextureSettings.backgroundColor);
         }
 
-        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor) {
+        public override void Configure(CommandBuffer cmd, RenderTextureDescriptor cameraTextureDescriptor)
+        {
             RenderTextureDescriptor normalsTextureDescriptor = cameraTextureDescriptor;
             normalsTextureDescriptor.colorFormat = normalsTextureSettings.colorFormat;
             normalsTextureDescriptor.depthBufferBits = normalsTextureSettings.depthBufferBits;
@@ -91,12 +98,14 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
             ConfigureClear(ClearFlag.All, normalsTextureSettings.backgroundColor);
         }
 
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData) {
+        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        {
             if (!normalsMaterial || !occludersMaterial)
                 return;
 
             CommandBuffer cmd = CommandBufferPool.Get();
-            using (new ProfilingScope(cmd, new ProfilingSampler("SceneViewSpaceNormalsTextureCreation"))) {
+            using (new ProfilingScope(cmd, new ProfilingSampler("SceneViewSpaceNormalsTextureCreation")))
+            {
                 context.ExecuteCommandBuffer(cmd);
                 cmd.Clear();
 
@@ -117,13 +126,15 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
             CommandBufferPool.Release(cmd);
         }
 
-        public override void OnCameraCleanup(CommandBuffer cmd) {
+        public override void OnCameraCleanup(CommandBuffer cmd)
+        {
             cmd.ReleaseTemporaryRT(normals.id);
         }
 
     }
 
-    private class ScreenSpaceOutlinePass : ScriptableRenderPass {
+    private class ScreenSpaceOutlinePass : ScriptableRenderPass
+    {
 
         private readonly Material screenSpaceOutlineMaterial;
 
@@ -132,11 +143,13 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
         RenderTargetIdentifier temporaryBuffer;
         int temporaryBufferID = Shader.PropertyToID("_TemporaryBuffer");
 
-        public ScreenSpaceOutlinePass(RenderPassEvent renderPassEvent, ScreenSpaceOutlineSettings settings) {
+        public ScreenSpaceOutlinePass(RenderPassEvent renderPassEvent, ScreenSpaceOutlineSettings settings)
+        {
             this.renderPassEvent = renderPassEvent;
 
             screenSpaceOutlineMaterial = new Material(Shader.Find("Hidden/Outlines"));
             screenSpaceOutlineMaterial.SetColor("_OutlineColor", settings.outlineColor);
+            screenSpaceOutlineMaterial.SetColor("_HighLightColor", settings.highLightColor);
             screenSpaceOutlineMaterial.SetFloat("_OutlineScale", settings.outlineScale);
 
             screenSpaceOutlineMaterial.SetFloat("_DepthThreshold", settings.depthThreshold);
@@ -148,7 +161,8 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
             screenSpaceOutlineMaterial.SetFloat("_SteepAngleMultiplier", settings.steepAngleMultiplier);
         }
 
-        public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData) {
+        public override void OnCameraSetup(CommandBuffer cmd, ref RenderingData renderingData)
+        {
             RenderTextureDescriptor temporaryTargetDescriptor = renderingData.cameraData.cameraTargetDescriptor;
             temporaryTargetDescriptor.depthBufferBits = 0;
             cmd.GetTemporaryRT(temporaryBufferID, temporaryTargetDescriptor, FilterMode.Bilinear);
@@ -157,12 +171,14 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
             cameraColorTarget = renderingData.cameraData.renderer.cameraColorTarget;
         }
 
-        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData) {
+        public override void Execute(ScriptableRenderContext context, ref RenderingData renderingData)
+        {
             if (!screenSpaceOutlineMaterial)
                 return;
 
             CommandBuffer cmd = CommandBufferPool.Get();
-            using (new ProfilingScope(cmd, new ProfilingSampler("ScreenSpaceOutlines"))) {
+            using (new ProfilingScope(cmd, new ProfilingSampler("ScreenSpaceOutlines")))
+            {
 
                 Blit(cmd, cameraColorTarget, temporaryBuffer);
                 Blit(cmd, temporaryBuffer, cameraColorTarget, screenSpaceOutlineMaterial);
@@ -172,7 +188,8 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
             CommandBufferPool.Release(cmd);
         }
 
-        public override void OnCameraCleanup(CommandBuffer cmd) {
+        public override void OnCameraCleanup(CommandBuffer cmd)
+        {
             cmd.ReleaseTemporaryRT(temporaryBufferID);
         }
 
@@ -181,14 +198,15 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
     [SerializeField] private RenderPassEvent renderPassEvent = RenderPassEvent.AfterRenderingOpaques;
     [SerializeField] private LayerMask outlinesLayerMask;
     [SerializeField] private LayerMask outlinesOccluderLayerMask;
-    
+
     [SerializeField] private ScreenSpaceOutlineSettings outlineSettings = new ScreenSpaceOutlineSettings();
     [SerializeField] private ViewSpaceNormalsTextureSettings viewSpaceNormalsTextureSettings = new ViewSpaceNormalsTextureSettings();
 
     private ViewSpaceNormalsTexturePass viewSpaceNormalsTexturePass;
     private ScreenSpaceOutlinePass screenSpaceOutlinePass;
-    
-    public override void Create() {
+
+    public override void Create()
+    {
         if (renderPassEvent < RenderPassEvent.BeforeRenderingPrePasses)
             renderPassEvent = RenderPassEvent.BeforeRenderingPrePasses;
 
@@ -196,7 +214,8 @@ public class ScreenSpaceOutlines : ScriptableRendererFeature {
         screenSpaceOutlinePass = new ScreenSpaceOutlinePass(renderPassEvent, outlineSettings);
     }
 
-    public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData) {
+    public override void AddRenderPasses(ScriptableRenderer renderer, ref RenderingData renderingData)
+    {
         renderer.EnqueuePass(viewSpaceNormalsTexturePass);
         renderer.EnqueuePass(screenSpaceOutlinePass);
     }
