@@ -54,7 +54,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
   - {fileID: 4580074863913089780}
-  m_RendererFeatureMap: adc0de57c6d2eee5f43a3c8cd2b18f3f
+  - {fileID: 2104837564972987918}
+  m_RendererFeatureMap: adc0de57c6d2eee5f43a3c8cd2b18f3f0ef61c0a9de2351d
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -97,6 +98,19 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &2104837564972987918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ea35e593f26f0e246951eb0faf55b54a, type: 3}
+  m_Name: ForceNormalsFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
 --- !u!114 &4580074863913089780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -122,7 +136,7 @@ MonoBehaviour:
     highLightColor: {r: 0, g: 1, b: 1, a: 1}
     outlineScale: 1
     depthThreshold: 1.5
-    robertsCrossMultiplier: 100
+    robertsCrossMultiplier: 500
     normalThreshold: 0.4
     steepAngleThreshold: 0.2
     steepAngleMultiplier: 25
