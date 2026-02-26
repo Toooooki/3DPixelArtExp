@@ -137,13 +137,14 @@ MonoBehaviour:
     m_Bits: 0
   outlineSettings:
     outlineColor: {r: 0, g: 0, b: 0, a: 1}
-    outlineScale: 1
-    depthThreshold: 0.15
-    robertsCrossMultiplier: 10
+    outlineScale: 0
+    depthThreshold: 1
+    robertsCrossMultiplier: 155
     normalThreshold: 0.4
     steepAngleThreshold: 0.3
     steepAngleMultiplier: 25
-    outlineShader: {fileID: 4800000, guid: 3eb395c7133f67e4ca94900000522203, type: 3}
+    outlineShader: {fileID: -6465566751694194690, guid: 165118649b9cf5f4eb93cff2f97dff9f,
+      type: 3}
   viewSpaceNormalsTextureSettings:
     colorFormat: 0
     depthBufferBits: 16
