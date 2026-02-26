@@ -54,7 +54,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
   - {fileID: 4580074863913089780}
-  m_RendererFeatureMap: adc0de57c6d2eee5f43a3c8cd2b18f3f
+  - {fileID: 2870597930405694366}
+  m_RendererFeatureMap: adc0de57c6d2eee5f43a3c8cd2b18f3f9e8bcdce9b69d627
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -97,6 +98,23 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
+--- !u!114 &2870597930405694366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 48b10bf11d894964ca3fa51e6de3d53e, type: 3}
+  m_Name: PixelizeFeature
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  settings:
+    pixelWidth: 320
+    pixelHeight: 180
+    renderPassEvent: 550
 --- !u!114 &4580074863913089780
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,11 +138,12 @@ MonoBehaviour:
   outlineSettings:
     outlineColor: {r: 0, g: 0, b: 0, a: 1}
     outlineScale: 1
-    depthThreshold: 1
-    robertsCrossMultiplier: 150
+    depthThreshold: 0.15
+    robertsCrossMultiplier: 10
     normalThreshold: 0.4
-    steepAngleThreshold: 0.2
+    steepAngleThreshold: 0.3
     steepAngleMultiplier: 25
+    outlineShader: {fileID: 4800000, guid: 3eb395c7133f67e4ca94900000522203, type: 3}
   viewSpaceNormalsTextureSettings:
     colorFormat: 0
     depthBufferBits: 16
